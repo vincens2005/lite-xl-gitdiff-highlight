@@ -38,10 +38,28 @@ function gitdiff.changed_lines(diff)
 			goto continue
 		end
 
-
+		-- remove hunk header
+		hunk[1] = hunk[1]:gsub("@@%s+-%d+,%d+%s++%d+,%d+%s+@@", "")
+	
 		local current_line = hunk_start
 		for ii, line in pairs(hunk) do
-			print(hunk_start)
+			if line:match("^-") then
+				table.insert(changed_lines, {
+					line_number = current_line,
+					change_type = "deletion"
+				})
+				-- do not add to the current line
+				goto continue1
+			end
+
+			if line:match("^+") then
+				table.insert(changed_lines, {
+					line_number = current_line,
+					change_type = "addition"
+				})
+			end
+			current_line = current_line + 1
+			::continue1::
 		end
 		::continue::
 	end
