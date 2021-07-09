@@ -7,7 +7,7 @@ local function extract_hunks(input)
 
 	local function end_hunk(new_line)
 		if #current_hunk > 0 then
-			table.insert(hunks, table.concat(current_hunk))
+			table.insert(hunks, current_hunk)
 			current_hunk = {new_line}
 		end
 	end
@@ -32,16 +32,20 @@ function gitdiff.changed_lines(diff)
 	local hunks = extract_hunks(diff)
 	-- iterate over hunks
 	for i, hunk in pairs(hunks) do
-		local hunk_start = hunk:match("@@%s+-%d+,%d+%s++(%d-),%d+%s+@@")
-
+		local hunk_start = hunk[1]:match("@@%s+-%d+,%d+%s++(%d-),%d+%s+@@")
+		hunk_start = tonumber(hunk_start)
 		if  hunk_start == nil then
-			print(hunk)
 			goto continue
 		end
-		print()
+
+
+		local current_line = hunk_start
+		for ii, line in pairs(hunk) do
+			print(hunk_start)
+		end
 		::continue::
 	end
-	
+
 	return changed_lines
 end
 
