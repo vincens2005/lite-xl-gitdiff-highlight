@@ -33,6 +33,7 @@ function gitdiff.changed_lines(diff)
 	-- iterate over hunks
 	for i, hunk in pairs(hunks) do
 		local hunk_start = hunk:match("@@%s+-%d+,%d+%s++(%d-),%d+%s+@@")
+
 		if  hunk_start == nil then
 			print(hunk)
 			goto continue
