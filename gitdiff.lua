@@ -40,7 +40,7 @@ function gitdiff.changed_lines(diff)
 
 		-- remove hunk header
 		hunk[1] = hunk[1]:gsub("@@%s+-%d+,%d+%s++%d+,%d+%s+@@", "")
-	
+
 		local current_line = hunk_start
 		for ii, line in pairs(hunk) do
 			if line:match("^-") then
