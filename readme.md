@@ -28,10 +28,11 @@ gitdiff.changed_lines(diff)
 }
 ```
 
-## `test.lua`
+## test.lua
 pipe a git diff into its stdin and it will run some tests on `gitdiff.lua`
 
 eg:
 	`cat test_diff.txt | lua test.lua`
+
 eg #2:
 	`git diff gitdiff.lua | lua test.lua`
