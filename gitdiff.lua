@@ -74,7 +74,12 @@ function gitdiff.changed_lines(diff)
 		::continue::
 	end
 
-	return changed_lines
+	local indexed_changed_lines = {}
+	for i, line in pairs(changed_lines) do
+		indexed_changed_lines[line.line_number] = line.change_type
+	end
+
+	return indexed_changed_lines
 end
 
 return gitdiff

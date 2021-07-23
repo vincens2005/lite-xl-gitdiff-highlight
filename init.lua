@@ -8,8 +8,24 @@ local gitdiff = require "plugins.gitdiff_highlight.gitdiff"
 style.gitdiff_addition = {common.color "#587c0c"} -- vscode default
 style.gitdiff_width = 3
 
+-- test diff
+local current_diff = {
+	{
+		line_number = 12,
+		change_type = "addition"
+	},
+	{
+		line_number = 14,
+		change_type = "modification"
+	},
+	{
+		line_number = 20,
+		change_type = "deletion"
+	}
+}
+
 local function gitdiff_padding(dv)
-	return style.padding.x * string.len(tostring(#dv.doc.lines)) + style.padding.x / 2
+	return style.padding.x * 1.5 + dv:get_font():get_width(#dv.doc.lines)
 end
 
 local old_docview_gutter = DocView.draw_line_gutter

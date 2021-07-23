@@ -17,19 +17,18 @@ local gitdiff = require "gitdiff"
 gitdiff.changed_lines(diff)
 -- returns a table that looks like the following:
 {
-	{
-		line_number = 12,
-		change_type = "addition"
-	},
-	{
-		line_number = 14,
-		change_type = "modification"
-	},
-	{
-		line_number = 20,
-		change_type = "deletion"
-	}
+	nil,
+	nil,
+	"addition",
+	"addition",
+	nil,
+	nil,
+	"modification",
+	"deletion",
+	nil,
+	nil
 }
+-- where the index of the table is the line number the change corresponds to
 ```
 
 ## test.lua
