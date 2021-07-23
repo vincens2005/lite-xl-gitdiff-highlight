@@ -1,6 +1,10 @@
-# gitdiff.lua - an oddly specific git diff parser
+# lite-xl git diff highlight plugin
 
-this was created as part of a solution to [this issue](https://github.com/lite-xl/lite-xl/issues/322), but if you have another use for it, cool
+todo: readme for plugin
+
+## gitdiff.lua - an oddly specific git diff parser
+
+gitdiff.lua was created as part of a solution to [this issue](https://github.com/lite-xl/lite-xl/issues/322), but if you have another use for it, cool
 
 ## usage
 
