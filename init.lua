@@ -16,27 +16,26 @@ style.gitdiff_width = 3
 
 local last_doc_lines = 0
 -- test diff
-local current_diff = {
-	nil,
-	nil,
-	"addition",
-	"addition",
-	nil,
-	nil,
-	"modification",
-	"deletion",
-	nil,
-	nil,
-	"addition",
-	"modification",
-	"deletion",
-	"deletion",
-	"addition",
-	"modification",
-	"modification",
-	"modification"
-}
+local current_diff = {}
 local current_doc_name = nil
+local diffs = {}
+
+local function update_diff()
+	core.log("todo haha")
+end
+
+local function set_doc(doc_name)
+	if current_diff ~= {} and current_doc_name ~= nil then
+		diffs[current_doc_name] = current_diff
+	end
+	current_doc_name = doc_name
+	if diffs[current_doc_name] ~= nil then
+		current_diff = diffs[current_doc_name]
+	else
+		current_diff = {}
+	end
+	update_diff()
+end
 
 local function gitdiff_padding(dv)
 	return style.padding.x * 1.5 + dv:get_font():get_width(#dv.doc.lines)
@@ -89,10 +88,9 @@ end
 
 local old_docview_update = DocView.update
 function DocView:update()
-	if current_doc_name ~= self:get_filename() and self:get_filename() ~= "---" and core.active_view.doc == self.doc then
-		-- TODO reload diff etc
-		core.log(self:get_filename())
-		current_doc_name = self:get_filename()
+	local filename = self.doc.abs_filename or ""
+	if current_doc_name ~= filename and filename ~= "---" and core.active_view.doc == self.doc then
+		set_doc(filename)
 	end
 
 	return old_docview_update(self)
