@@ -21,6 +21,8 @@ local current_doc_name = nil
 local diffs = {}
 
 local function update_diff()
+	-- TODO check if file is in git repo by using git ls-files --error-unmatch <file>
+	-- TODO run the command git diff HEAD <file>
 	core.log("todo haha")
 end
 
