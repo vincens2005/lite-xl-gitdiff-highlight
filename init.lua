@@ -23,7 +23,11 @@ local diffs = {}
 local function update_diff()
 	-- TODO check if file is in git repo by using git ls-files --error-unmatch <file>
 	-- TODO run the command git diff HEAD <file>
-	core.log("todo haha")
+	local current_doc = core.active_view.doc
+	if current_doc == nil then return end
+	--current_doc = system.absolute_path(current_doc.filename)
+	--local is_in_repo = process.start("git ls-file --error-unmatch " .. current_doc)
+--	core.log(is_in_repo)
 end
 
 local function set_doc(doc_name)
@@ -44,8 +48,10 @@ local function gitdiff_padding(dv)
 end
 
 local old_docview_gutter = DocView.draw_line_gutter
-function DocView:draw_line_gutter(idx, x, y)
-	old_docview_gutter(self, idx, x, y)
+local old_gutter_width = DocView.get_gutter_width
+function DocView:draw_line_gutter(idx, x, y, width)
+	local gw, gpad = old_gutter_width(self)
+	old_docview_gutter(self, idx, x, y, gpad and gw - gpad or gw)
 
 	if current_diff[idx] == nil then
 		return
@@ -68,9 +74,8 @@ function DocView:draw_line_gutter(idx, x, y)
 	renderer.draw_rect(x, y + yoffset, style.gitdiff_width, self:get_line_height(), color)
 end
 
-local old_gutter_width = DocView.get_gutter_width
 function DocView:get_gutter_width()
-	return old_gutter_width(self) + style.padding.x
+	return old_gutter_width(self) + style.padding.x / 2
 end
 
 local old_text_change = Doc.on_text_change
