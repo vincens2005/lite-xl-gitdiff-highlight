@@ -29,6 +29,7 @@ end
 
 -- this will only work on single-file diffs
 function gitdiff.changed_lines(diff)
+	if diff == nil then return {} end
 	local changed_lines = {}
 	local hunks = extract_hunks(diff)
 	-- iterate over hunks
@@ -38,6 +39,8 @@ function gitdiff.changed_lines(diff)
 		if  hunk_start == nil then
 			goto continue
 		end
+
+		hunk_start = hunk_start - 1
 
 		-- remove hunk header
 		hunk[1] = hunk[1]:gsub("@@%s+-%d+,%d+%s++%d+,%d+%s+@@", "")
