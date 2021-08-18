@@ -32,6 +32,8 @@ local function update_diff()
 	if current_doc == nil or current_doc.filename == nil then return end
 	current_doc = system.absolute_path(current_doc.filename)
 
+	core.log_quiet("updating diff for " .. current_doc)
+
 	if current_file.is_in_repo ~= true then
 		local is_in_repo = process.start({"git", "ls-files", "--error-unmatch", current_doc})
 		is_in_repo:wait(10)
@@ -46,9 +48,8 @@ local function update_diff()
 
 	local max_diff_size = system.get_file_info(current_doc).size * config.max_diff_size
 	local diff_proc = process.start({"git", "diff", "HEAD", current_doc})
-	diff_proc:wait(10)
+	diff_proc:wait(100)
 	local raw_diff = diff_proc:read_stdout(max_diff_size)
-	if raw_diff == nil then return end
 	local parsed_diff = gitdiff.changed_lines(raw_diff)
 	current_diff = parsed_diff
 end
@@ -59,11 +60,9 @@ local function set_doc(doc_name)
 		diff = current_diff,
 		is_in_repo = current_file.is_in_repo
 	}
-	core.log("stroing diff ".. current_file.name)
 	end
 	current_file.name = doc_name
 	if diffs[current_file.name] ~= nil then
-		core.log("loding diff ".. current_file.name)
 		current_diff = diffs[current_file.name].diff
 		current_file.is_in_repo = diffs[current_file.name].is_in_repo
 	else
@@ -137,4 +136,10 @@ function DocView:update()
 	end
 
 	return old_docview_update(self)
+end
+
+local old_doc_save = Doc.save
+function Doc:save()
+	old_doc_save(self)
+	update_diff()
 end

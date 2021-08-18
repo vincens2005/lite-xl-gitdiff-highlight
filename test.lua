@@ -3,6 +3,7 @@ local gitdiff = require "gitdiff"
 
 local input = io.read("*a")
 local lines = gitdiff.changed_lines(input)
+
 print("testing first line...")
 print(lines[1])
 print()

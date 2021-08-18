@@ -63,8 +63,6 @@ function gitdiff.changed_lines(diff)
 				})
 				for iii, lline in pairs(changed_lines) do
 					if lline.line_number == current_line and lline.change_type == "deletion" then
-						changed_lines[iii] = nil
-						changed_lines[#changed_lines] = nil
 						table.insert(changed_lines, {
 							line_number = current_line,
 							change_type = "modification"
