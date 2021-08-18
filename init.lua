@@ -16,9 +16,9 @@ style.gitdiff_width = 3
 
 local last_doc_lines = 0
 
+-- maximum size of git diff to read, multiplied by current filesize
 config.max_diff_size = 2
 
--- test diff
 local current_diff = {}
 local current_file = {
     name = nil,
@@ -103,14 +103,17 @@ function DocView:draw_line_gutter(idx, x, y, width)
 
 	-- add margin in between highlight and text
 	x = x + gitdiff_padding(self)
-
 	local yoffset = self:get_line_text_y_offset()
-	renderer.draw_rect(x, y + yoffset, style.gitdiff_width, self:get_line_height(), color)
+	if current_diff[idx] ~= "deletion" then
+		renderer.draw_rect(x, y + yoffset, style.gitdiff_width, self:get_line_height(), color)
+		return
+		end
+	renderer.draw_rect(x, y + (yoffset * 4), style.gitdiff_width, self:get_line_height() / 2, color)
 end
 
 function DocView:get_gutter_width()
 	if not current_file.is_in_repo then return old_gutter_width(self) end
-	return old_gutter_width(self) + style.padding.x / 2
+	return old_gutter_width(self) + style.padding.x * style.gitdiff_width / 12
 end
 
 local old_text_change = Doc.on_text_change
@@ -134,10 +137,8 @@ function DocView:update()
 	if current_file.name ~= filename and filename ~= "---" and core.active_view.doc == self.doc then
 		set_doc(filename)
 	end
-
 	return old_docview_update(self)
 end
-
 local old_doc_save = Doc.save
 function Doc:save()
 	old_doc_save(self)
