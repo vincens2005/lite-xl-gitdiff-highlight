@@ -140,7 +140,7 @@ function DocView:update()
 	return old_docview_update(self)
 end
 local old_doc_save = Doc.save
-function Doc:save()
-	old_doc_save(self)
+function Doc:save(...)
+	old_doc_save(self, ...)
 	update_diff()
 end
