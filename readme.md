@@ -3,6 +3,7 @@
 ![screenshot](screenshot.png)
 
 This plugin will highlight changed lines of any file tracked by git
+
 Clone this repo and symlink `init.lua` and `gitdiff.lua` into `USERDIR/plugins/gitdiff_highlight` or download the files and copy them there
 
 ## gitdiff.lua - an oddly specific git diff parser
