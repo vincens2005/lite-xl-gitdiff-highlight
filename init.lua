@@ -30,7 +30,11 @@ local diffs = {}
 local function update_diff()
 	local current_doc = core.active_view.doc
 	if current_doc == nil or current_doc.filename == nil then return end
-	current_doc = system.absolute_path(current_doc.filename)
+	if system.get_file_info(current_doc.filename) then
+		current_doc = system.absolute_path(current_doc.filename)
+	else
+		current_doc = current_doc.filename
+	end
 
 	core.log_quiet("updating diff for " .. current_doc)
 
