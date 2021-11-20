@@ -4,6 +4,7 @@ local config = require "core.config"
 local DocView = require "core.docview"
 local Doc = require "core.doc"
 local common = require "core.common"
+local command = require "core.command"
 local style = require "core.style"
 local gitdiff = require "plugins.gitdiff_highlight.gitdiff"
 
@@ -148,3 +149,54 @@ function Doc:save(...)
 	old_doc_save(self, ...)
 	update_diff()
 end
+local function get_active_view()
+  if getmetatable(core.active_view) == DocView then
+    return core.active_view
+  end
+  return nil
+end
+
+local function jump_to_next_change()
+	local doc = get_active_view().doc
+  local line, col = doc:get_selection()
+
+	while current_diff[line] do
+		line = line + 1
+	end
+
+	while line < #doc.lines do
+		if current_diff[line] then
+			doc:set_selection(line, col, line, col)
+			return
+		end
+		line = line + 1
+	end
+end
+
+local function jump_to_previous_change()
+	local doc = get_active_view().doc
+  local line, col = doc:get_selection()
+
+	while current_diff[line] do
+		line = line - 1
+	end
+
+	while line > 0 do
+		if current_diff[line] then
+			doc:set_selection(line, col, line, col)
+			return
+		end
+		line = line - 1
+	end
+end
+
+command.add("core.docview", {
+  ["gitdiff:previous-change"] = function()
+    jump_to_previous_change()
+  end,
+
+  ["gitdiff:next-change"] = function()
+    jump_to_next_change()
+  end,
+})
+
