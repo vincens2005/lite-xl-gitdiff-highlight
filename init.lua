@@ -149,16 +149,17 @@ function Doc:save(...)
 	old_doc_save(self, ...)
 	update_diff()
 end
+
 local function get_active_view()
-  if getmetatable(core.active_view) == DocView then
-    return core.active_view
-  end
-  return nil
+	if getmetatable(core.active_view) == DocView then
+		return core.active_view
+	end
+	return nil
 end
 
 local function jump_to_next_change()
 	local doc = get_active_view().doc
-  local line, col = doc:get_selection()
+	local line, col = doc:get_selection()
 
 	while current_diff[line] do
 		line = line + 1
@@ -175,7 +176,7 @@ end
 
 local function jump_to_previous_change()
 	local doc = get_active_view().doc
-  local line, col = doc:get_selection()
+	local line, col = doc:get_selection()
 
 	while current_diff[line] do
 		line = line - 1
@@ -191,12 +192,11 @@ local function jump_to_previous_change()
 end
 
 command.add("core.docview", {
-  ["gitdiff:previous-change"] = function()
-    jump_to_previous_change()
-  end,
+	["gitdiff:previous-change"] = function()
+		jump_to_previous_change()
+	end,
 
-  ["gitdiff:next-change"] = function()
-    jump_to_next_change()
-  end,
+	["gitdiff:next-change"] = function()
+		jump_to_next_change()
+	end,
 })
-
