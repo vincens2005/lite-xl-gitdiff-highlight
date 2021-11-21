@@ -61,10 +61,10 @@ end
 
 local function set_doc(doc_name)
 	if current_diff ~= {} and current_file.name ~= nil then
-	diffs[current_file.name] = {
-		diff = current_diff,
-		is_in_repo = current_file.is_in_repo
-	}
+		diffs[current_file.name] = {
+			diff = current_diff,
+			is_in_repo = current_file.is_in_repo
+		}
 	end
 	current_file.name = doc_name
 	if diffs[current_file.name] ~= nil then
@@ -138,8 +138,8 @@ end
 
 local old_docview_update = DocView.update
 function DocView:update()
-	local filename = self.doc.abs_filename or ""
-	if current_file.name ~= filename and filename ~= "---" and core.active_view.doc == self.doc then
+	local filename = self.doc.abs_filename
+	if filename and current_file.name ~= filename and filename ~= "---" and #filename>0 and core.active_view.doc == self.doc then
 		set_doc(filename)
 	end
 	return old_docview_update(self)
@@ -150,15 +150,8 @@ function Doc:save(...)
 	update_diff()
 end
 
-local function get_active_view()
-	if getmetatable(core.active_view) == DocView then
-		return core.active_view
-	end
-	return nil
-end
-
 local function jump_to_next_change()
-	local doc = get_active_view().doc
+	local doc = core.active_view.doc
 	local line, col = doc:get_selection()
 
 	while current_diff[line] do
@@ -175,7 +168,7 @@ local function jump_to_next_change()
 end
 
 local function jump_to_previous_change()
-	local doc = get_active_view().doc
+	local doc = core.active_view.doc
 	local line, col = doc:get_selection()
 
 	while current_diff[line] do
