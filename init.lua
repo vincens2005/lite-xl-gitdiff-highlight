@@ -7,11 +7,22 @@ local common = require "core.common"
 local command = require "core.command"
 local style = require "core.style"
 local gitdiff = require "plugins.gitdiff_highlight.gitdiff"
+local _, MiniMap = pcall(require, "plugins.minimap")
 
 -- vscode defaults
 style.gitdiff_addition = {common.color "#587c0c"}
 style.gitdiff_modification = {common.color "#0c7d9d"}
 style.gitdiff_deletion = {common.color "#94151b"}
+
+local function color_for_diff(diff)
+	if diff == "addition" then
+		return style.gitdiff_addition
+	elseif diff == "modification" then
+		return style.gitdiff_modification
+	else
+		return style.gitdiff_deletion
+	end
+end
 
 style.gitdiff_width = 3
 
@@ -96,15 +107,7 @@ function DocView:draw_line_gutter(idx, x, y, width)
 		return
 	end
 
-	local color = nil
-
-	if current_diff[idx] == "addition" then
-		color = style.gitdiff_addition
-	elseif current_diff[idx] == "modification" then
-		color = style.gitdiff_modification
-	else
-		color = style.gitdiff_deletion
-	end
+	local color = color_for_diff(current_diff[idx])
 
 	-- add margin in between highlight and text
 	x = x + gitdiff_padding(self)
@@ -148,6 +151,19 @@ local old_doc_save = Doc.save
 function Doc:save(...)
 	old_doc_save(self, ...)
 	update_diff()
+end
+
+if MiniMap then
+	-- Override MiniMap's line_highlight_color, but first
+	-- stash the old one (using [] in case it is not there at all)
+	local old_line_highlight_color = MiniMap["line_highlight_color"]
+	function MiniMap:line_highlight_color(line_index)
+		local diff = current_diff[line_index]
+		if diff then
+			return color_for_diff(diff)
+		end
+		return old_line_highlight_color(line_index)
+	end
 end
 
 local function jump_to_next_change()
