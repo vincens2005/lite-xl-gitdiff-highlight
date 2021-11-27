@@ -41,7 +41,7 @@ local function update_diff()
 
 	if current_file.is_in_repo ~= true then
 		local is_in_repo = process.start({"git", "ls-files", "--error-unmatch", current_doc})
-		is_in_repo:wait(10)
+		is_in_repo:wait(100)
 		is_in_repo = is_in_repo:returncode()
 		is_in_repo = is_in_repo == 0
 		current_file.is_in_repo = is_in_repo
