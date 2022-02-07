@@ -89,7 +89,7 @@ local function set_doc(doc_name)
 end
 
 local function gitdiff_padding(dv)
-	return style.padding.x * 1.5 + dv:get_font():get_width(#dv.doc.lines)
+	return style.gitdiff_padding or style.padding.x --* 1.5 + dv:get_font():get_width(#dv.doc.lines)
 end
 
 local old_docview_gutter = DocView.draw_line_gutter
