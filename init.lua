@@ -10,9 +10,9 @@ local gitdiff = require "plugins.gitdiff_highlight.gitdiff"
 local _, MiniMap = pcall(require, "plugins.minimap")
 
 -- vscode defaults
-style.gitdiff_addition = {common.color "#587c0c"}
-style.gitdiff_modification = {common.color "#0c7d9d"}
-style.gitdiff_deletion = {common.color "#94151b"}
+style.gitdiff_addition = style.gitdiff_addition or {common.color "#587c0c"}
+style.gitdiff_modification = style.gitdiff_modification or {common.color "#0c7d9d"}
+style.gitdiff_deletion = style.gitdiff_deletion or {common.color "#94151b"}
 
 local function color_for_diff(diff)
 	if diff == "addition" then
