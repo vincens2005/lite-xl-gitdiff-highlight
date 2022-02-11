@@ -24,7 +24,7 @@ local function color_for_diff(diff)
 	end
 end
 
-style.gitdiff_width = 3
+style.gitdiff_width = style.gitdiff_width or 3
 
 local last_doc_lines = 0
 
