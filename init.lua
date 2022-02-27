@@ -63,7 +63,7 @@ local function update_diff()
   end
 
 	local max_diff_size = system.get_file_info(current_doc).size * config.max_diff_size
-	local diff_proc = process.start({"git", "diff", "HEAD", current_doc})
+	local diff_proc = process.start({"git", "diff", "HEAD", "--word-diff", "--unified=1", "--no-color", current_doc})
 	diff_proc:wait(100)
 	local raw_diff = diff_proc:read_stdout(max_diff_size)
 	local parsed_diff = gitdiff.changed_lines(raw_diff)
