@@ -142,6 +142,12 @@ function DocView:new(...)
 	update_diff(self.doc)
 end
 
+local old_doc_load = Doc.load
+function Doc:load(...)
+	old_doc_load(self, ...)
+	update_diff(self)
+end
+
 if MiniMap then
 	-- Override MiniMap's line_highlight_color, but first
 	-- stash the old one (using [] in case it is not there at all)
