@@ -115,7 +115,7 @@ end
 
 local old_text_change = Doc.on_text_change
 function Doc:on_text_change(type)
-	if not get_diff(self).is_in_repo then return end
+	if not get_diff(self).is_in_repo then goto end_of_function end
 	local line, col = self:get_selection()
 	if diffs[self][line] == "addition" then goto end_of_function end
 	-- TODO figure out how to detect an addition
