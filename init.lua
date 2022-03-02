@@ -43,9 +43,9 @@ local function init_diff(doc)
 end
 
 local function update_diff(doc)
-	local current_file = ""
 	if doc == nil or doc.filename == nil then return end
-	
+
+	local current_file
 	if system.get_file_info(doc.filename) then
 		current_file = system.absolute_path(doc.filename)
 	else
@@ -115,8 +115,9 @@ end
 
 local old_text_change = Doc.on_text_change
 function Doc:on_text_change(type)
+	local line
 	if not get_diff(self).is_in_repo then goto end_of_function end
-	local line, col = self:get_selection()
+	line = self:get_selection()
 	if diffs[self][line] == "addition" then goto end_of_function end
 	-- TODO figure out how to detect an addition
 	if type == "insert" or (type == "remove" and #self.lines == last_doc_lines) then
@@ -148,7 +149,7 @@ function Doc:load(...)
 	update_diff(self)
 end
 
-if MiniMap then
+if type(MiniMap) == "table" then
 	-- Override MiniMap's line_highlight_color, but first
 	-- stash the old one (using [] in case it is not there at all)
 	local old_line_highlight_color = MiniMap["line_highlight_color"]
@@ -165,7 +166,7 @@ local function jump_to_next_change()
 	local doc = core.active_view.doc
 	local line, col = doc:get_selection()
 	if not get_diff(doc).is_in_repo then return end
-	
+
 	while diffs[doc][line] do
 		line = line + 1
 	end
