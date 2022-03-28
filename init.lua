@@ -56,7 +56,9 @@ local function update_diff(doc)
 
 	if not get_diff(doc).is_in_repo then
 		local is_in_repo = process.start({"git", "ls-files", "--error-unmatch", current_file})
-		is_in_repo:wait(100)
+		while is_in_repo:running() do
+		  coroutine.yield(0.1)
+		end
 		is_in_repo = is_in_repo:returncode()
 		is_in_repo = is_in_repo == 0
 		if is_in_repo then
@@ -69,7 +71,9 @@ local function update_diff(doc)
 
 	local max_diff_size = system.get_file_info(current_file).size * config.max_diff_size
 	local diff_proc = process.start({"git", "diff", "HEAD", "--word-diff", "--unified=1", "--no-color", current_file})
-	diff_proc:wait(100)
+	while diff_proc:running() do
+		coroutine.yield(0.1)
+	end
 	local raw_diff = diff_proc:read_stdout(max_diff_size)
 	local parsed_diff = gitdiff.changed_lines(raw_diff)
 	diffs[doc] = parsed_diff
@@ -134,19 +138,25 @@ end
 local old_doc_save = Doc.save
 function Doc:save(...)
 	old_doc_save(self, ...)
-	update_diff(self)
+	core.add_thread(function()
+		update_diff(self)
+	end)
 end
 
 local old_docview_new = DocView.new
 function DocView:new(...)
 	old_docview_new(self, ...)
-	update_diff(self.doc)
+	core.add_thread(function()
+		update_diff(self.doc)
+	end)
 end
 
 local old_doc_load = Doc.load
 function Doc:load(...)
 	old_doc_load(self, ...)
-	update_diff(self)
+	core.add_thread(function()
+		update_diff(self)
+	end)
 end
 
 if type(MiniMap) == "table" then
@@ -207,3 +217,4 @@ command.add("core.docview", {
 		jump_to_next_change()
 	end,
 })
+
