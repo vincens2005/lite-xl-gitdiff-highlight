@@ -33,51 +33,50 @@ function gitdiff.changed_lines(diff)
 	local changed_lines = {}
 	local hunks = extract_hunks(diff)
 	-- iterate over hunks
-	for i, hunk in pairs(hunks) do
+	for _, hunk in pairs(hunks) do
+		local current_line
 		local hunk_start = hunk[1]:match("@@%s+-%d+,%d+%s++(%d-),%d+%s+@@")
 		hunk_start = tonumber(hunk_start)
-		if  hunk_start == nil then
+		if  hunk_start == nil then -- mod
 			goto continue
 		end
 
-		hunk_start = hunk_start - 1
+		current_line = hunk_start - 1
 
 		-- remove hunk header
 		hunk[1] = hunk[1]:gsub("@@%s+-%d+,%d+%s++%d+,%d+%s+@@", "")
 
-		local current_line = hunk_start
-		for ii, line in pairs(hunk) do
-			if line:match("^-") then
+		for _, line in pairs(hunk) do
+			if line:match("^%s-%[%-.-%-]$") then
 				table.insert(changed_lines, {
 					line_number = current_line,
 					change_type = "deletion"
 				})
 				-- do not add to the current line
-				goto continue1
+				goto skip_line
 			end
 
-			if line:match("^+") then
+			if line:match("^%s-{%+.-+}$") then
 				table.insert(changed_lines, {
 					line_number = current_line,
 					change_type = "addition"
 				})
-				for iii, lline in pairs(changed_lines) do
-					if lline.line_number == current_line and lline.change_type == "deletion" then
-						table.insert(changed_lines, {
-							line_number = current_line,
-							change_type = "modification"
-						})
-					end
-				end
+
+			elseif line:match("{%+.-+}") or line:match("%[%-.-%-]") then
+				table.insert(changed_lines, {
+					line_number = current_line,
+					change_type = "modification"
+				})
 			end
+
 			current_line = current_line + 1
-			::continue1::
+			::skip_line::
 		end
 		::continue::
 	end
 
 	local indexed_changed_lines = {}
-	for i, line in pairs(changed_lines) do
+	for _, line in pairs(changed_lines) do
 		indexed_changed_lines[line.line_number] = line.change_type
 	end
 

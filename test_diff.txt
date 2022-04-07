@@ -1,163 +1,51 @@
-diff --git a/kansas.txt b/kansas.txt
-index 4f971a8..de4d81a 100644
---- a/kansas.txt
-+++ b/kansas.txt
-@@ -2639,6 +2639,8 @@ of 1854.
-      16. What condition followed?
- 
-      17. How long was this after the organization of the Territory?
-+     
-+     18. Kansas? more like kanSUS
- 
- 
- 
-@@ -2880,6 +2882,8 @@ Kansas.
-      12. Who was the first State Governor?
- 
-      13. How was the State capital selected?
-+     
-+     14. When was kansas invented?
- 
- 
- 
-@@ -2890,7 +2894,7 @@ Kansas.
-     How modestly they stood,
-   Along the sunny hillsides,
-     Or nestled in the wood.
--  They sheltered men and women,
-+  They sheltered men,
-     Brave-hearted pioneers;
-   Each one became a landmark
-     Of Freedom’s trial years.
-@@ -2922,7 +2926,7 @@ Kansas.
-   And are the fitting emblems
-     Of patient years of toil.
- 
--  God bless the homes of Kansas!
-+  God bless the people of Kansas!
-     From poorest to the best;
-   The cabin of the border,
-     The sod house of the west;
-@@ -2949,7 +2953,7 @@ their farms, or establishing public institutions. The energy that
- might have accomplished these things had been given to fighting and to
- politics. When Kansas became a State, the people had almost as few of
- the comforts of life as when they first came to the Territory. A few
--of them had come with little idea of the hardships and privations of
-+of them had come with  idea of the hardships and privations of
- frontier life, and others had believed that such conditions would last
- but a short time. Many of these, of course, grew discouraged and
- returned to their eastern homes. But the great body of Kansas pioneers
-@@ -5132,7 +5136,7 @@ there are twenty great buildings on Mount Oread. The central
- department of the University is the college, which provides a liberal
- education in languages, sciences, mathematics, history, and kindred
- subjects. Besides the college there are schools of engineering, of
--fine arts, of law, of pharmacy, of medicine, and of education. Ours
-+fine arts, of law, of pharmacy, of maedicine, and of education. Ours
- now ranks high among the universities of the United States.
- 
- =Control of State Schools.= Altogether, the University, the
-@@ -5234,6 +5238,8 @@ interests of education.
-          important of the denominational colleges in Kansas.
- 
-      13. What other opportunities for education have been provided?
-+     
-+     14. Why is parsing git diffs so hard?
- 
- 
- 
-@@ -5272,7 +5278,11 @@ on the level plain was a noted spot, for the Trail ran near its base,
- and while it provided a place of rest and safety for many a weary
- traveler, it also afforded a retreat from which the Indians could dash
- down upon the traders. In later years much of the rock was torn away
--for building purposes and this historic old landmark was rapidly
-+for building purposes and this historic old landmark
-+
-+peepee
-+
-+ was rapidly
- disappearing. The Woman’s Kansas Day Club resolved to save this
- historic spot, and secured a deed for the Rock and five acres of
- ground surrounding it. On Kansas Day, 1909, the women presented this
-@@ -5299,7 +5309,7 @@ be lowered and the flag of the United States to be raised, September
-       KANSAS.]
- 
- =Marking of the Santa Fe Trail.= The Santa Fe Trail, which was
--associated with most of the early history of Kansas, was known
-+associated with most of the early hiaaastory of Kansas, was known
- throughout the country, but with the settlement of the State the old
- highway was growing dim; the ruts were filling in, grass was covering
- the broad track, and with the passing of those who knew it in the old
-@@ -5325,7 +5335,7 @@ for the right of way of the Santa Fe Trail.”
-      [Illustration: SANTA FE TRAIL MARKER.]
- 
- =Pawnee Capitol.= The old stone building erected at Pawnee for the
--capitol of Kansas still stands on the Fort Riley Reservation. In 1907
-+capitol of Kansas still stands on the Fort Raaaaailey Reservation. In 1907
- a subscription fund was raised and the money used to repair and
- restore the old building so that it will stand for many years as a
- relic of our early history.
-@@ -5347,7 +5357,7 @@ Governor of Kansas from 1883 to 1885.
-      [Illustration: THE JOHN BROWN MONUMENT.]
- 
- =Other Monuments.= A number of monuments have been erected in various
--parts of the State in commemoration of noted persons or events. The
-+parts of the State in commemoraaa ation of noted persons or events. The
- John Brown monument at Osawatomie was dedicated on August 30, 1877. It
- bears two inscriptions: “In commemoration of those who, on the 30th of
- August, 1856, gave up their lives at the battle of Osawatomie in
-@@ -5407,7 +5417,7 @@ matter relating to the history of Kansas. In these collections may be
- found information concerning the explorations, the Indians, the
- overland travel, the settlements, and the condition and progress of
- the State in its various departments. Volumes of clippings, files of
--newspapers, and thousands of books, provide a very complete record of
-+newspapers, and thousands of books, provid another e a very complete record of
- all phases of the State’s history. One of the interesting features is
- the collection of relics, among which are: an old Spanish sword
- supposed to have belonged to one of Coronado’s soldiers; the pistol of
-@@ -5475,6 +5485,8 @@ entire history of Kansas.
-         be used?
- 
-      11. Explain the work and purpose of the State Historical Society.
-+     
-+     12. Test git diffs
- 
- 
- 
-@@ -5522,14 +5534,17 @@ pioneer has only himself to lean on; he learns to take chances, he
- laughs at adversity, he adapts himself to circumstances, and he lives
- in the future.
- 
--     [Illustration: THE FORUM, WICHITA, KANSAS.]
- 
- =Qualities that Make the Kansas Spirit.= These characteristics are
- not, however, peculiar to the Kansas people, for the early settlers of
- other states lived on the frontier and developed these same qualities.
- But Kansas had a Territorial history which was very different from
- that of any other state and which has left its impress upon the
--people. Other pioneers have had the great task of making a state out
-+people. Other pioneers have had the great task of ma
-+
-+test aAAaa
-+
-+king a state out
- of a wilderness, but Kansas pioneers had a second great task, that of
- making a free state in the face of the most determined opposition.
- They came to Kansas as the Puritans came to America, in the name of
-@@ -5543,7 +5558,7 @@ govern themselves. These are characteristics of every true Kansan and
- the qualities that make the Kansas spirit.
- 
- =Manifestations of the Kansas Spirit.= This spirit is evident in many
--phases of the life and progress of our people, but it is nowhere more
-+phases of the life and progress o and this is anf our people, but it is nowhere more
- apparent than in their political affairs and in their laws. The spirit
- that made the pioneers refuse to submit to the “Bogus Legislature”
- also impelled them to send more than their share of soldiers to the
-@@ -5567,7 +5582,7 @@ States there is a growing tendency on the part of the people to
- exercise a more direct control of their government; to take more and
- more authority into their own hands. This means that the people must
- be interested, active and well-informed. For us, it means that the
--quality of Kansas government depends upon the quality of Kansas
-+quality of Kansas government but this is a test depends upon the quality of Kansas
- citizenship. While the task of the pioneers was a heavy one, ours
- to-day is no less great, though it is different. Their struggle was to
- get the soil under cultivation, ours to see that it does not become
+diff --git a/src/main.c b/src/main.c
+index 8193d20..f71e3bc 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -19,33 +19,34 @@
+
+int game_looping = 1;
+
+int direction = LEFT; {+// modified line+}
+
+int highscore = 0;
+
+int game[GAME_RES][GAME_RES]; // 0 is black, 1 is snake, 2 is apple
+
+[-int snake[1000][3]; // is it there? x, y-]
+
+[-int snake_len = 15;-]
+[-int apple_pos[2];-]
+
+int score = 0;
+
+int rand_range(int min, int max) { [-srandom(time(0));-]{+// modified block+}
+{+	urmom(time(0));+}
+	return [-(random()-]{+(urmom()+} % (max - min + 1)) + min; {+// haha+}
+}
+
+void draw_frame() {
+	gfx_SetDrawBuffer();
+	gfx_FillScreen(0);
+	
+	{+/*+}
+{+	 *  Added block+}
+{+	 * there's new stuff in here+}
+{+	 */+}
+	
+	char text_score[13]; // max seven digit number score
+	[-sprintf(text_score,-]{+sprint(text_score,+} "score %d", score);
+	fontlib_ClearWindow();
+	fontlib_SetCursorPosition(5, fontlib_GetWindowYMin());
+	fontlib_DrawString(text_score); {+// single modification+}
+	
+	if (highscore > 0) {
+		char text_hs[16];
+@@ -231,7 +232,7 @@ int main(void) {
+		//game_looping++;
+	}
+
+	gfx_End(); {+// change in other hunk+}
+
+	return 0;
+}
