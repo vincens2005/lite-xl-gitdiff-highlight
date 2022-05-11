@@ -25,7 +25,6 @@ local function color_for_diff(diff)
 end
 
 style.gitdiff_width = style.gitdiff_width or 3
-style.gitdiff_padding = style.gitdiff_padding or style.padding.x
 
 local last_doc_lines = 0
 
@@ -41,6 +40,10 @@ end
 
 local function init_diff(doc)
 	diffs[doc] = {is_in_repo = true}
+end
+
+local function gitdiff_padding(dv)
+	return style.padding.x * 1.5 + dv:get_font():get_width(#dv.doc.lines)
 end
 
 local function update_diff(doc)
@@ -99,7 +102,8 @@ function DocView:draw_line_gutter(idx, x, y, width)
 	local color = color_for_diff(diffs[self.doc][idx])
 
 	-- add margin in between highlight and text
-	x = x + style.gitdiff_padding
+	x = x + gitdiff_padding(self)
+
 
 	local yoffset = self:get_line_text_y_offset()
 	if diffs[self.doc][idx] ~= "deletion" then
