@@ -1,4 +1,4 @@
--- mod-version:2
+-- mod-version:3
 local core = require "core"
 local config = require "core.config"
 local DocView = require "core.docview"
@@ -86,31 +86,33 @@ end
 
 local old_docview_gutter = DocView.draw_line_gutter
 local old_gutter_width = DocView.get_gutter_width
-function DocView:draw_line_gutter(idx, x, y, width)
+function DocView:draw_line_gutter(line, x, y, width)
 	if not get_diff(self.doc).is_in_repo then
-		return old_docview_gutter(self, idx, x, y, width)
+		return old_docview_gutter(self, line, x, y, width)
 	end
+	local lh = self:get_line_height()
 
 	local gw, gpad = old_gutter_width(self)
 
-	old_docview_gutter(self, idx, x, y, gpad and gw - gpad or gw)
+	old_docview_gutter(self, line, x, y, gpad and gw - gpad or gw)
 
-	if diffs[self.doc][idx] == nil then
+	if diffs[self.doc][line] == nil then
 		return
 	end
 
-	local color = color_for_diff(diffs[self.doc][idx])
+	local color = color_for_diff(diffs[self.doc][line])
 
 	-- add margin in between highlight and text
 	x = x + gitdiff_padding(self)
 
 
 	local yoffset = self:get_line_text_y_offset()
-	if diffs[self.doc][idx] ~= "deletion" then
+	if diffs[self.doc][line] ~= "deletion" then
 		renderer.draw_rect(x, y + yoffset, style.gitdiff_width, self:get_line_height(), color)
 		return
 	end
 	renderer.draw_rect(x - style.gitdiff_width * 2, y + yoffset, style.gitdiff_width * 4, 2, color)
+	return lh
 end
 
 function DocView:get_gutter_width()
