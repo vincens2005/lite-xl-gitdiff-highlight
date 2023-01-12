@@ -74,7 +74,7 @@ local function update_diff(doc)
 	end
 
 	local max_diff_size = system.get_file_info(current_file).size * config.max_diff_size
-	local diff_proc = process.start({"git", "diff", "HEAD", "--word-diff", "--unified=1", "--no-color", current_file})
+	local diff_proc = process.start({"git", "diff", "HEAD", "--word-diff", "--no-optional-locks", "--unified=1", "--no-color", current_file})
 	while diff_proc:running() do
 		coroutine.yield(0.1)
 	end
