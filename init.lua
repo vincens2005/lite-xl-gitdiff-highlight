@@ -1,4 +1,6 @@
 -- mod-version:3
+-- Highlights changed lines, if file is in a git repository.
+-- Also supports MiniMap, if user has it installed and activated.
 local core = require "core"
 local config = require "core.config"
 local DocView = require "core.docview"
@@ -7,12 +9,11 @@ local common = require "core.common"
 local command = require "core.command"
 local style = require "core.style"
 local gitdiff = require "plugins.gitdiff_highlight.gitdiff"
-local _, MiniMap = pcall(require, "plugins.minimap")
 
 -- vscode defaults
-style.gitdiff_addition = style.gitdiff_addition or {common.color "#587c0c"}
-style.gitdiff_modification = style.gitdiff_modification or {common.color "#0c7d9d"}
-style.gitdiff_deletion = style.gitdiff_deletion or {common.color "#94151b"}
+style.gitdiff_addition = style.gitdiff_addition or { common.color "#587c0c" }
+style.gitdiff_modification = style.gitdiff_modification or { common.color "#0c7d9d" }
+style.gitdiff_deletion = style.gitdiff_deletion or { common.color "#94151b" }
 
 local function color_for_diff(diff)
 	if diff == "addition" then
@@ -29,17 +30,13 @@ style.gitdiff_width = style.gitdiff_width or 3
 local last_doc_lines = 0
 
 -- maximum size of git diff to read, multiplied by current filesize
-config.max_diff_size = 2
+config.plugins.gitdiff_highlight.max_diff_size = 2
 
 
 local diffs = setmetatable({}, { __mode = "k" })
 
 local function get_diff(doc)
-	return diffs[doc] or {is_in_repo = false}
-end
-
-local function init_diff(doc)
-	diffs[doc] = {is_in_repo = true}
+	return diffs[doc] or { is_in_repo = false }
 end
 
 local function gitdiff_padding(dv)
@@ -49,38 +46,41 @@ end
 local function update_diff(doc)
 	if doc == nil or doc.filename == nil then return end
 
-	local current_file
-	if system.get_file_info(doc.filename) then
-		current_file = system.absolute_path(doc.filename)
-	else
-		current_file = doc.filename
+	local finfo = system.get_file_info(doc.filename)
+	local full_path = finfo and system.absolute_path(doc.filename)
+	if not full_path then
+		return
 	end
 
-	core.log_quiet("updating diff for " .. current_file)
+	core.log_quiet("[gitdiff_highlight] updating diff for " .. full_path)
+
+	local path = full_path:match("(.*" .. PATHSEP .. ")")
 
 	if not get_diff(doc).is_in_repo then
-		local is_in_repo = process.start({"git", "ls-files", "--error-unmatch", current_file})
-		while is_in_repo:running() do
-		  coroutine.yield(0.1)
+		local git_proc = process.start({
+			"git", "-C", path, "ls-files", "--error-unmatch", full_path
+		})
+		while git_proc:running() do
+			coroutine.yield(0.1)
 		end
-		is_in_repo = is_in_repo:returncode()
-		is_in_repo = is_in_repo == 0
-		if is_in_repo then
-			init_diff(doc)
-		else
-			core.log_quiet("file ".. current_file .." is not in a git repository")
+		if 0 ~= git_proc:returncode() then
+			core.log_quiet("[gitdiff_highlight] file "
+					.. full_path .. " is not in a git repository")
+
 			return
 		end
 	end
 
-	local max_diff_size = system.get_file_info(current_file).size * config.max_diff_size
-	local diff_proc = process.start({"git", "diff", "HEAD", "--word-diff", "--unified=1", "--no-color", current_file})
+	local max_diff_size
+	max_diff_size = config.plugins.gitdiff_highlight.max_diff_size * finfo.size
+	local diff_proc = process.start({
+		"git", "-C", path, "diff", "HEAD", "--word-diff",
+		"--unified=1", "--no-color", full_path
+	})
 	while diff_proc:running() do
 		coroutine.yield(0.1)
 	end
-	local raw_diff = diff_proc:read_stdout(max_diff_size)
-	local parsed_diff = gitdiff.changed_lines(raw_diff)
-	diffs[doc] = parsed_diff
+	diffs[doc] = gitdiff.changed_lines(diff_proc:read_stdout(max_diff_size))
 	diffs[doc].is_in_repo = true
 end
 
@@ -105,13 +105,16 @@ function DocView:draw_line_gutter(line, x, y, width)
 	-- add margin in between highlight and text
 	x = x + gitdiff_padding(self)
 
-
 	local yoffset = self:get_line_text_y_offset()
 	if diffs[self.doc][line] ~= "deletion" then
-		renderer.draw_rect(x, y + yoffset, style.gitdiff_width, self:get_line_height(), color)
+		renderer.draw_rect(x, y + yoffset, style.gitdiff_width,
+				self:get_line_height(), color)
+
 		return
 	end
-	renderer.draw_rect(x - style.gitdiff_width * 2, y + yoffset, style.gitdiff_width * 4, 2, color)
+	renderer.draw_rect(x - style.gitdiff_width * 2,
+			y + yoffset, style.gitdiff_width * 4, 2, color)
+
 	return lh
 end
 
@@ -162,10 +165,19 @@ function Doc:load(...)
 	end)
 end
 
-if type(MiniMap) == "table" then
+-- add minimap support only after all plugins are loaded
+core.add_thread(function()
+	-- don't load minimap if user has disabled it
+	if false == config.plugins.minimap then return end
+
+	-- abort if MiniMap isn't installed
+	local found, MiniMap = pcall(require, "plugins.minimap")
+	if not found then return end
+
+
 	-- Override MiniMap's line_highlight_color, but first
-	-- stash the old one (using [] in case it is not there at all)
-	local old_line_highlight_color = MiniMap["line_highlight_color"]
+	-- stash the old one
+	local old_line_highlight_color = MiniMap.line_highlight_color
 	function MiniMap:line_highlight_color(line_index)
 		local diff = get_diff(core.active_view.doc)
 		if diff.is_in_repo and diff[line_index] then
@@ -173,7 +185,7 @@ if type(MiniMap) == "table" then
 		end
 		return old_line_highlight_color(line_index)
 	end
-end
+end)
 
 local function jump_to_next_change()
 	local doc = core.active_view.doc
@@ -220,4 +232,3 @@ command.add("core.docview", {
 		jump_to_next_change()
 	end,
 })
-
