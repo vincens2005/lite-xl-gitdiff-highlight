@@ -27,8 +27,6 @@ end
 
 style.gitdiff_width = style.gitdiff_width or 3
 
-local last_doc_lines = 0
-
 -- maximum size of git diff to read, multiplied by current filesize
 config.plugins.gitdiff_highlight.max_diff_size = 2
 
@@ -125,18 +123,18 @@ end
 
 local old_text_change = Doc.on_text_change
 function Doc:on_text_change(type)
-	local line
 	if not get_diff(self).is_in_repo then goto end_of_function end
-	line = self:get_selection()
+	local line = self:get_selection()
 	if diffs[self][line] == "addition" then goto end_of_function end
 	-- TODO figure out how to detect an addition
+	local last_doc_lines = self.gitdiff_highlight_last_doc_lines or 0
 	if type == "insert" or (type == "remove" and #self.lines == last_doc_lines) then
 		diffs[self][line] = "modification"
 	elseif type == "remove" then
 		diffs[self][line] = "deletion"
 	end
 	::end_of_function::
-	last_doc_lines = #self.lines
+	self.gitdiff_highlight_last_doc_lines = #self.lines
 	return old_text_change(self, type)
 end
 
@@ -160,6 +158,7 @@ end
 local old_doc_load = Doc.load
 function Doc:load(...)
 	old_doc_load(self, ...)
+	self.gitdiff_highlight_last_doc_lines = #self.lines
 	core.add_thread(function()
 		update_diff(self)
 	end)
