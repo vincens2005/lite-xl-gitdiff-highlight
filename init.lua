@@ -142,26 +142,21 @@ end
 local old_doc_save = Doc.save
 function Doc:save(...)
 	old_doc_save(self, ...)
-	core.add_thread(function()
-		update_diff(self)
+	core.add_thread(update_diff, nil, self)
 	end)
 end
 
 local old_docview_new = DocView.new
 function DocView:new(...)
 	old_docview_new(self, ...)
-	core.add_thread(function()
-		update_diff(self.doc)
-	end)
+	core.add_thread(update_diff, nil, self.doc)
 end
 
 local old_doc_load = Doc.load
 function Doc:load(...)
 	old_doc_load(self, ...)
 	self.gitdiff_highlight_last_doc_lines = #self.lines
-	core.add_thread(function()
-		update_diff(self)
-	end)
+	core.add_thread(update_diff, nil, self)
 end
 
 -- add minimap support only after all plugins are loaded
@@ -223,11 +218,6 @@ local function jump_to_previous_change()
 end
 
 command.add("core.docview", {
-	["gitdiff:previous-change"] = function()
-		jump_to_previous_change()
-	end,
-
-	["gitdiff:next-change"] = function()
-		jump_to_next_change()
-	end,
+	["gitdiff:previous-change"] = jump_to_previous_change,
+	["gitdiff:next-change"] = jump_to_next_change
 })
