@@ -117,8 +117,10 @@ function DocView:draw_line_gutter(line, x, y, width)
 end
 
 function DocView:get_gutter_width()
-	if not get_diff(self.doc).is_in_repo then return old_gutter_width(self) end
-	return old_gutter_width(self) + style.padding.x * style.gitdiff_width / 12
+	local gw, gpad = old_gutter_width(self)
+	if not get_diff(self.doc).is_in_repo then return gw, gpad end
+	
+	return gw + style.padding.x * style.gitdiff_width / 12, gpad
 end
 
 local old_text_change = Doc.on_text_change
