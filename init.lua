@@ -144,18 +144,11 @@ function Doc:on_text_change(type)
 	return on_text_change(self)
 end
 
-
 local old_doc_save = Doc.save
 function Doc:save(...)
 	old_doc_save(self, ...)
 	core.add_thread(update_diff, nil, self)
 	end)
-end
-
-local old_docview_new = DocView.new
-function DocView:new(...)
-	old_docview_new(self, ...)
-	core.add_thread(update_diff, nil, self.doc)
 end
 
 local old_doc_load = Doc.load
