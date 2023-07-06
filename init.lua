@@ -42,14 +42,9 @@ local function gitdiff_padding(dv)
 end
 
 local function update_diff(doc)
-	if doc == nil or doc.filename == nil then return end
+	if not doc or not doc.abs_filename then return end
 
-	local finfo = system.get_file_info(doc.filename)
-	local full_path = finfo and system.absolute_path(doc.filename)
-	if not full_path then
-		return
-	end
-
+	local full_path = doc.abs_filename
 	core.log_quiet("[gitdiff_highlight] updating diff for " .. full_path)
 
 	local path = full_path:match("(.*" .. PATHSEP .. ")")
@@ -70,6 +65,7 @@ local function update_diff(doc)
 	end
 
 	local max_diff_size
+	local finfo = system.get_file_info(full_path)
 	max_diff_size = config.plugins.gitdiff_highlight.max_diff_size * finfo.size
 	local diff_proc = process.start({
 		"git", "-C", path, "diff", "HEAD", "--word-diff",
