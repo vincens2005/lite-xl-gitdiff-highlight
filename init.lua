@@ -115,7 +115,7 @@ end
 function DocView:get_gutter_width()
 	local gw, gpad = old_gutter_width(self)
 	if not get_diff(self.doc).is_in_repo then return gw, gpad end
-	
+
 	return gw + style.padding.x * style.gitdiff_width / 12, gpad
 end
 
@@ -126,10 +126,10 @@ local function on_text_change(doc)
 end
 function Doc:on_text_change(type)
 	if not get_diff(self).is_in_repo then return on_text_change(self) end
-	
+
 	local line = self:get_selection()
 	if diffs[self][line] == "addition" then return on_text_change(self) end
-	
+
 	-- TODO figure out how to detect an addition
 	local last_doc_lines = self.gitdiff_highlight_last_doc_lines or 0
 	if type == "insert" or (type == "remove" and #self.lines == last_doc_lines) then
@@ -144,7 +144,6 @@ local old_doc_save = Doc.save
 function Doc:save(...)
 	old_doc_save(self, ...)
 	core.add_thread(update_diff, nil, self)
-	end)
 end
 
 local old_doc_load = Doc.load
