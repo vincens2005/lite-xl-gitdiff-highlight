@@ -27,6 +27,32 @@ local function extract_hunks(input)
 	return hunks
 end
 
+-- determines if line is a hunk header and returns
+-- the starting line of changed version (second set of numbers part before
+-- optional comma) or nil
+---@param line string
+---@return integer | nil
+local function get_hunk_start(line)
+	if "string" ~= type(line) or not line:match("^@@[^@]+@@$") then
+		return nil
+	end
+
+	-- doing "@@%s+-%d+(,%d+)?%s++(%d-)(,%d+)?%s+@@" did not work
+	-- so we loop through a couple of patterns
+	local patterns = {
+		"@@%s+-%d+,%d+%s++(%d-),%d+%s+@@",
+		"@@%s+-%d+%s++(%d-),%d+%s+@@",
+		"@@%s+-%d+,%d+%s++(%d-)%s+@@",
+		"@@%s+-%d+%s++(%d-)%s+@@"
+	}
+	local start
+	for _, p in ipairs(patterns) do
+		start = line:match(p)
+		if start then return tonumber(start) end
+	end
+	return nil
+end
+
 -- this will only work on single-file diffs
 function gitdiff.changed_lines(diff)
 	if not diff then return {} end
@@ -35,8 +61,7 @@ function gitdiff.changed_lines(diff)
 	-- iterate over hunks
 	for _, hunk in ipairs(hunks) do
 		local current_line
-		local hunk_start = hunk[1]:match("@@%s+-%d+,%d+%s++(%d-),%d+%s+@@")
-		hunk_start = tonumber(hunk_start)
+		local hunk_start = get_hunk_start(hunk[1])
 		if not hunk_start then -- mod
 			goto continue
 		end
@@ -44,7 +69,7 @@ function gitdiff.changed_lines(diff)
 		current_line = hunk_start - 1
 
 		-- remove hunk header
-		hunk[1] = hunk[1]:gsub("@@%s+-%d+,%d+%s++%d+,%d+%s+@@", "")
+		hunk[1] = ""
 
 		for _, line in ipairs(hunk) do
 			if line:match("^%s-%[%-.-%-]$") then
