@@ -29,7 +29,7 @@ end
 
 -- this will only work on single-file diffs
 function gitdiff.changed_lines(diff)
-	if diff == nil then return {} end
+	if not diff then return {} end
 	local changed_lines = {}
 	local hunks = extract_hunks(diff)
 	-- iterate over hunks
@@ -37,7 +37,7 @@ function gitdiff.changed_lines(diff)
 		local current_line
 		local hunk_start = hunk[1]:match("@@%s+-%d+,%d+%s++(%d-),%d+%s+@@")
 		hunk_start = tonumber(hunk_start)
-		if  hunk_start == nil then -- mod
+		if not hunk_start then -- mod
 			goto continue
 		end
 
