@@ -33,7 +33,7 @@ end
 ---@param line string
 ---@return integer | nil
 local function get_hunk_start(line)
-	if "string" ~= type(line) or not line:match("^@@[^@]+@@$") then
+	if "string" ~= type(line) or not line:match("^@@[^@]+@@") then
 		return nil
 	end
 
@@ -45,6 +45,7 @@ local function get_hunk_start(line)
 		"@@%s+-%d+,%d+%s++(%d-)%s+@@",
 		"@@%s+-%d+%s++(%d-)%s+@@"
 	}
+
 	local start
 	for _, p in ipairs(patterns) do
 		start = line:match(p)
