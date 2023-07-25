@@ -184,7 +184,7 @@ local function jump_to_next_change()
 		line = line + 1
 	end
 
-	while line < #doc.lines do
+	while line <= #doc.lines do
 		if diffs[doc][line] then
 			doc:set_selection(line, col, line, col)
 			return
