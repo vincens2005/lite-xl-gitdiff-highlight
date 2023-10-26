@@ -41,6 +41,19 @@ local function gitdiff_padding(dv)
 	return style.padding.x * 1.5 + dv:get_font():get_width(#dv.doc.lines)
 end
 
+local function read_proc(proc, max_len)
+	local buffer = {}
+	repeat
+		coroutine.yield(0.1)
+		local buf = proc:read_stdout(max_len)
+		if buf and #buf > 0 then
+			table.insert(buffer, buf)
+			max_len = max_len - #buf
+		end
+	until not buf or max_len <= 0
+	return table.concat(buffer)
+end
+
 local function update_diff(doc)
 	if not doc or not doc.abs_filename then return end
 
@@ -71,10 +84,7 @@ local function update_diff(doc)
 		"git", "-C", path, "diff", "HEAD", "--word-diff",
 		"--unified=1", "--no-color", full_path
 	})
-	while diff_proc:running() do
-		coroutine.yield(0.1)
-	end
-	diffs[doc] = gitdiff.changed_lines(diff_proc:read_stdout(max_diff_size))
+	diffs[doc] = gitdiff.changed_lines(read_proc(diff_proc, max_diff_size))
 	diffs[doc].is_in_repo = true
 end
 
